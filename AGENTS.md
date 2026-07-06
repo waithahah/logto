@@ -78,3 +78,7 @@ Skills live under [.agents/skills/](.agents/skills/) ([Agent Skills](https://age
 - Unit tests: `pnpm ci:test` from repo root runs all package tests in parallel.
 - Individual package tests: `pnpm test` inside the package directory.
 - See `.github/CONTRIBUTING.md` for integration test instructions (Docker-based).
+
+### Response language
+Answer in the same language as the user's query. If unsure, ask in Chinese.
+
