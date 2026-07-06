@@ -47,7 +47,7 @@ function SessionForm({ data }: Props) {
               className={styles.sessionDuration}
               name={name}
               placeholder="14"
-              value={String(value)}
+              value={value === undefined ? '' : String(value)}
               min={1}
               max={maxSessionDuration}
               error={Boolean(errors.protectedAppMetadata?.sessionDuration)}
@@ -55,13 +55,13 @@ function SessionForm({ data }: Props) {
                 onChange(value && Number(value));
               }}
               onValueUp={() => {
-                onChange(value + 1);
+                onChange((value ?? 14) + 1);
               }}
               onValueDown={() => {
-                onChange(value - 1);
+                onChange((value ?? 14) - 1);
               }}
               onBlur={() => {
-                if (value < 1) {
+                if (value === undefined || value < 1) {
                   onChange(1);
                 } else if (value > maxSessionDuration) {
                   onChange(maxSessionDuration);

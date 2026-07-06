@@ -1,6 +1,8 @@
 import { MfaFactor, experience } from '@logto/schemas';
+import { useContext } from 'react';
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
 
+import PageContext from '@/Providers/PageContextProvider/PageContext';
 import { handleSearchParametersData } from '@/shared/utils/search-parameters';
 
 import AppLayout from './Layout/AppLayout';
@@ -11,6 +13,7 @@ import PageContextProvider from './Providers/PageContextProvider';
 import SettingsProvider from './Providers/SettingsProvider';
 import UserInteractionContextProvider from './Providers/UserInteractionContextProvider';
 import DevelopmentTenantNotification from './containers/DevelopmentTenantNotification';
+import CustomApp from './custom/App';
 import Callback from './pages/Callback';
 import Consent from './pages/Consent';
 import Continue from './pages/Continue';
@@ -70,156 +73,140 @@ const App = () => {
             <CaptchaContextProvider>
               <DevelopmentTenantNotification />
               <AppBoundary>
-                <Routes>
-                  <Route element={<LoadingLayerProvider />}>
-                    <Route path="springboard" element={<Springboard />} />
-                    <Route path="callback/:connectorId" element={<Callback />} />
-                    <Route
-                      path="callback/social/:connectorId"
-                      element={<SocialSignInWebCallback />}
-                    />
-                    <Route path="direct/:method/:target?" element={<DirectSignIn />} />
-                    <Route path={experience.routes.oneTimeToken} element={<OneTimeToken />} />
-                    <Route element={<AppLayout />}>
-                      <Route
-                        path={`${experience.routes.oneTimeToken}/error`}
-                        element={<OneTimeTokenErrorPage />}
-                      />
-                      <Route path={experience.routes.switchAccount} element={<SwitchAccount />} />
-                      <Route
-                        path="unknown-session"
-                        element={<ErrorPage message="error.invalid_session" />}
-                      />
-
-                      {/* Sign-in */}
-                      <Route path={experience.routes.signIn}>
-                        <Route index element={<SignIn />} />
-                        <Route path="password" element={<SignInPassword />} />
-                        <Route path="passkey" element={<SignInPasskeyVerification />} />
-                        <Route
-                          path="verification-methods"
-                          element={<SignInVerificationMethods />}
-                        />
-                      </Route>
-
-                      {/* Create passkey for sign-in */}
-                      <Route path="create-passkey" element={<PasskeySetup />} />
-
-                      {/* Register */}
-                      <Route path={experience.routes.register}>
-                        <Route index element={<Register />} />
-                        <Route path="password" element={<RegisterPassword />} />
-                      </Route>
-
-                      {/* Forgot password */}
-                      <Route path="forgot-password">
-                        <Route index element={<ForgotPassword />} />
-                        <Route path="reset" element={<ResetPassword />} />
-                      </Route>
-
-                      {/* Passwordless verification code */}
-                      <Route path=":flow/verification-code" element={<VerificationCode />} />
-
-                      {/* Mfa onboarding page. Prompt users to turn on 2-step verification. */}
-                      <Route path="mfa-onboarding" element={<MfaOnboarding />} />
-
-                      {/* Mfa binding */}
-                      <Route path={UserMfaFlow.MfaBinding}>
-                        <Route index element={<MfaBinding />} />
-                        <Route path={MfaFactor.TOTP} element={<TotpBinding />} />
-                        <Route path={MfaFactor.WebAuthn} element={<WebAuthnBinding />} />
-                        <Route path={MfaFactor.BackupCode} element={<BackupCodeBinding />} />
-                        <Route
-                          path={MfaFactor.EmailVerificationCode}
-                          element={<EmailMfaBinding />}
-                        />
-                        <Route
-                          path={MfaFactor.PhoneVerificationCode}
-                          element={<PhoneMfaBinding />}
-                        />
-                      </Route>
-
-                      {/* Mfa verification */}
-                      <Route path={UserMfaFlow.MfaVerification}>
-                        <Route index element={<MfaVerification />} />
-                        <Route path={MfaFactor.TOTP} element={<TotpVerification />} />
-                        <Route path={MfaFactor.WebAuthn} element={<WebAuthnVerification />} />
-                        <Route path={MfaFactor.BackupCode} element={<BackupCodeVerification />} />
-                        <Route
-                          path={MfaFactor.EmailVerificationCode}
-                          element={<EmailVerificationCode />}
-                        />
-                        <Route
-                          path={MfaFactor.PhoneVerificationCode}
-                          element={<PhoneVerificationCode />}
-                        />
-                      </Route>
-
-                      {/* Continue set up missing profile */}
-                      <Route path="continue">
-                        <Route path=":method" element={<Continue />} />
-                      </Route>
-
-                      {/* Social sign-in pages */}
-                      <Route path="social">
-                        <Route path="link/:connectorId" element={<SocialLinkAccount />} />
-                        <Route path="landing/:connectorId" element={<SocialLanding />} />
-                      </Route>
-
-                      {/* Single sign-on */}
-                      <Route path={experience.routes.sso}>
-                        {/* Single sign-on first screen landing page */}
-                        <Route index element={<SingleSignOnLanding />} />
-                        <Route path="email" element={<SingleSignOnEmail />} />
-                        <Route path="connectors" element={<SingleSignOnConnectors />} />
-                      </Route>
-
-                      {/* Consent */}
-                      <Route path="consent" element={<Consent />} />
-
-                      {/* Device flow */}
-                      <Route path={experience.routes.device} element={<Device />} />
-                      <Route
-                        path={`${experience.routes.device}/success`}
-                        element={<DeviceSuccess />}
-                      />
-
-                      {/*
-                       * Identifier sign-in (first screen)
-                       * The first screen which only display specific identifier-based sign-in methods to users
-                       */}
-                      <Route
-                        path={experience.routes.identifierSignIn}
-                        element={<IdentifierSignIn />}
-                      />
-
-                      {/*
-                       * Identifier register (first screen)
-                       * The first screen which only display specific identifier-based registration methods to users
-                       */}
-                      <Route
-                        path={experience.routes.identifierRegister}
-                        element={<IdentifierRegister />}
-                      />
-
-                      {/*
-                       * Reset password (first screen)
-                       * The first screen which allow users to directly access the password reset page
-                       */}
-                      <Route
-                        path={experience.routes.resetPassword}
-                        element={<ResetPasswordLanding />}
-                      />
-                      <Route path="*" element={<ErrorPage />} />
-                    </Route>
-                  </Route>
-                </Routes>
+                <MainApp />
               </AppBoundary>
             </CaptchaContextProvider>
           </UserInteractionContextProvider>
         </SettingsProvider>
       </PageContextProvider>
     </BrowserRouter>
+  );
+};
+
+const MainApp = () => {
+  const { experienceSettings } = useContext(PageContext);
+  const useCustomUiFromSource = experienceSettings?.customUiAssets?.useCustomUiFromSource === true;
+
+  if (useCustomUiFromSource) {
+    return <CustomApp />;
+  }
+
+  return <DefaultAppRoutes />;
+};
+
+const DefaultAppRoutes = () => {
+  return (
+    <Routes>
+      <Route element={<LoadingLayerProvider />}>
+        <Route path="springboard" element={<Springboard />} />
+        <Route path="callback/:connectorId" element={<Callback />} />
+        <Route path="callback/social/:connectorId" element={<SocialSignInWebCallback />} />
+        <Route path="direct/:method/:target?" element={<DirectSignIn />} />
+        <Route path={experience.routes.oneTimeToken} element={<OneTimeToken />} />
+        <Route element={<AppLayout />}>
+          <Route
+            path={`${experience.routes.oneTimeToken}/error`}
+            element={<OneTimeTokenErrorPage />}
+          />
+          <Route path={experience.routes.switchAccount} element={<SwitchAccount />} />
+          <Route path="unknown-session" element={<ErrorPage message="error.invalid_session" />} />
+
+          {/* Sign-in */}
+          <Route path={experience.routes.signIn}>
+            <Route index element={<SignIn />} />
+            <Route path="password" element={<SignInPassword />} />
+            <Route path="passkey" element={<SignInPasskeyVerification />} />
+            <Route path="verification-methods" element={<SignInVerificationMethods />} />
+          </Route>
+
+          {/* Create passkey for sign-in */}
+          <Route path="create-passkey" element={<PasskeySetup />} />
+
+          {/* Register */}
+          <Route path={experience.routes.register}>
+            <Route index element={<Register />} />
+            <Route path="password" element={<RegisterPassword />} />
+          </Route>
+
+          {/* Forgot password */}
+          <Route path="forgot-password">
+            <Route index element={<ForgotPassword />} />
+            <Route path="reset" element={<ResetPassword />} />
+          </Route>
+
+          {/* Passwordless verification code */}
+          <Route path=":flow/verification-code" element={<VerificationCode />} />
+
+          {/* Mfa onboarding page. Prompt users to turn on 2-step verification. */}
+          <Route path="mfa-onboarding" element={<MfaOnboarding />} />
+
+          {/* Mfa binding */}
+          <Route path={UserMfaFlow.MfaBinding}>
+            <Route index element={<MfaBinding />} />
+            <Route path={MfaFactor.TOTP} element={<TotpBinding />} />
+            <Route path={MfaFactor.WebAuthn} element={<WebAuthnBinding />} />
+            <Route path={MfaFactor.BackupCode} element={<BackupCodeBinding />} />
+            <Route path={MfaFactor.EmailVerificationCode} element={<EmailMfaBinding />} />
+            <Route path={MfaFactor.PhoneVerificationCode} element={<PhoneMfaBinding />} />
+          </Route>
+
+          {/* Mfa verification */}
+          <Route path={UserMfaFlow.MfaVerification}>
+            <Route index element={<MfaVerification />} />
+            <Route path={MfaFactor.TOTP} element={<TotpVerification />} />
+            <Route path={MfaFactor.WebAuthn} element={<WebAuthnVerification />} />
+            <Route path={MfaFactor.BackupCode} element={<BackupCodeVerification />} />
+            <Route path={MfaFactor.EmailVerificationCode} element={<EmailVerificationCode />} />
+            <Route path={MfaFactor.PhoneVerificationCode} element={<PhoneVerificationCode />} />
+          </Route>
+
+          {/* Continue set up missing profile */}
+          <Route path="continue">
+            <Route path=":method" element={<Continue />} />
+          </Route>
+
+          {/* Social sign-in pages */}
+          <Route path="social">
+            <Route path="link/:connectorId" element={<SocialLinkAccount />} />
+            <Route path="landing/:connectorId" element={<SocialLanding />} />
+          </Route>
+
+          {/* Single sign-on */}
+          <Route path={experience.routes.sso}>
+            {/* Single sign-on first screen landing page */}
+            <Route index element={<SingleSignOnLanding />} />
+            <Route path="email" element={<SingleSignOnEmail />} />
+            <Route path="connectors" element={<SingleSignOnConnectors />} />
+          </Route>
+
+          {/* Consent */}
+          <Route path="consent" element={<Consent />} />
+
+          {/* Device flow */}
+          <Route path={experience.routes.device} element={<Device />} />
+          <Route path={`${experience.routes.device}/success`} element={<DeviceSuccess />} />
+
+          {/*
+           * Identifier sign-in (first screen)
+           * The first screen which only display specific identifier-based sign-in methods to users
+           */}
+          <Route path={experience.routes.identifierSignIn} element={<IdentifierSignIn />} />
+
+          {/*
+           * Identifier register (first screen)
+           * The first screen which only display specific identifier-based registration methods to users
+           */}
+          <Route path={experience.routes.identifierRegister} element={<IdentifierRegister />} />
+
+          {/*
+           * Reset password (first screen)
+           * The first screen which allow users to directly access the password reset page
+           */}
+          <Route path={experience.routes.resetPassword} element={<ResetPasswordLanding />} />
+          <Route path="*" element={<ErrorPage />} />
+        </Route>
+      </Route>
+    </Routes>
   );
 };
 

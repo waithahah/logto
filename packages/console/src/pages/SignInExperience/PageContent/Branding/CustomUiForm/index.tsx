@@ -6,11 +6,12 @@ import CloudUploadIcon from '@/assets/icons/cloud-upload.svg?react';
 import CustomCssEditorField from '@/components/CustomCssEditorField';
 import { CloudTag } from '@/components/FeatureTag';
 import { isCloud } from '@/consts/env';
-import { latestProPlanId } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Card from '@/ds-components/Card';
+import DangerousRaw from '@/ds-components/DangerousRaw';
 import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
+import Switch from '@/ds-components/Switch';
 import TextLink from '@/ds-components/TextLink';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import CustomUiAssetsUploader from '@/pages/SignInExperience/components/CustomUiAssetsUploader';
@@ -68,7 +69,7 @@ function OssBringYourUiCard() {
 function CustomUiForm() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { getDocumentationUrl } = useDocumentationUrl();
-  const { control } = useFormContext<SignInExperienceForm>();
+  const { control, register } = useFormContext<SignInExperienceForm>();
   const { currentSubscriptionQuota } = useContext(SubscriptionDataContext);
   const isBringYourUiEnabled = currentSubscriptionQuota.bringYourUiEnabled;
   const shouldShowOssBringYourUi = !isCloud;
@@ -80,10 +81,7 @@ function CustomUiForm() {
         <CustomCssEditorField />
       </Card>
       <Card>
-        <FormSectionTitle
-          title="custom_ui.bring_your_ui_title"
-          featureTag={{ isVisible: !isBringYourUiEnabled, plan: latestProPlanId }}
-        />
+        <FormSectionTitle title="custom_ui.bring_your_ui_title" />
         {isCloud && (
           <FormField
             title="sign_in_exp.custom_ui.bring_your_ui_upload_title"
@@ -117,7 +115,19 @@ function CustomUiForm() {
           </FormField>
         )}
         {isCloud && <CustomUiCspForm isDisabled={!isBringYourUiEnabled} />}
-        {shouldShowOssBringYourUi && <OssBringYourUiCard />}
+        {shouldShowOssBringYourUi && (
+          <FormField title={<DangerousRaw>自定义UI源码开发</DangerousRaw>}>
+            <Switch
+              description={
+                <DangerousRaw>
+                  开启后将使用 packages/experience
+                  下自定义开发的登录页面，关闭则使用系统默认的登录页面。
+                </DangerousRaw>
+              }
+              {...register('customUiAssets.useCustomUiFromSource')}
+            />
+          </FormField>
+        )}
       </Card>
     </>
   );

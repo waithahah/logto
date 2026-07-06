@@ -86,7 +86,7 @@ const sign_in_exp = {
     css_code_editor_description_link_content: '了解更多',
     css_code_editor_content_placeholder:
       '在此输入你的 CSS 覆盖规则，以按你的具体要求调整任何内容的样式。发挥你的创造力，让你的 UI 脱颖而出。',
-    bring_your_ui_title: '带上你的 UI',
+    bring_your_ui_title: '自定义UI',
     bring_your_ui_upload_title: '上传自定义 UI 资源',
     bring_your_ui_description:
       '上传一个压缩包 (.zip) 以使用你自己的代码替换 Logto 预构建的 UI。<a>了解更多</a>',

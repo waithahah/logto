@@ -143,7 +143,7 @@ function ProtectedAppSettings({ data }: Props) {
             {...register('protectedAppMetadata.origin', {
               required: true,
               validate: (value) => {
-                if (!validateUriOrigin(value)) {
+                if (!value || !validateUriOrigin(value)) {
                   return t('protected_app.form.errors.invalid_url');
                 }
 

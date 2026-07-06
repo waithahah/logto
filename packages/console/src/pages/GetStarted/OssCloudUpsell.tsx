@@ -7,12 +7,9 @@ import CloudIconDark from '@/assets/icons/cloud-icon-dark.svg?react';
 import CloudIcon from '@/assets/icons/cloud-icon.svg?react';
 import ExternalLinkIcon from '@/assets/icons/external-link.svg?react';
 import LighteningIcon from '@/assets/icons/lightening.svg?react';
-import PrivateCloudIcon from '@/assets/icons/private-cloud.svg?react';
-import { officialWebsiteContactPageLink } from '@/consts';
-import Button, { LinkButton } from '@/ds-components/Button';
+import Button from '@/ds-components/Button';
 import Card from '@/ds-components/Card';
 import IconButton from '@/ds-components/IconButton';
-import Spacer from '@/ds-components/Spacer';
 import Tag from '@/ds-components/Tag';
 import useTheme from '@/hooks/use-theme';
 import { openCloudUpsell, ossUpsellEntries } from '@/utils/oss-upsell';
@@ -81,7 +78,7 @@ function OssCloudUpsell({ isBannerVisible, onDismissBanner }: Props) {
           </IconButton>
         </Card>
       )}
-      <Card className={styles.card}>
+      {/* <Card className={styles.card}>
         <div className={styles.title}>{t('get_started.oss_cloud.private_cloud.title')}</div>
         <div className={styles.borderBox}>
           <div className={styles.rowWrapper}>
@@ -105,7 +102,7 @@ function OssCloudUpsell({ isBannerVisible, onDismissBanner }: Props) {
             targetBlank="noopener"
           />
         </div>
-      </Card>
+      </Card> */}
     </>
   );
 }

@@ -273,7 +273,10 @@ function PageContent({ data, onSignInExperienceUpdated, onAccountCenterUpdated }
               <Preview
                 isLivePreviewDisabled={isDirty}
                 signInExperience={previewConfigs}
-                isPreviewIframeDisabled={Boolean(data.customUiAssets)}
+                isPreviewIframeDisabled={
+                  Boolean(formData.customUiAssets?.id) ||
+                  Boolean(formData.customUiAssets?.useCustomUiFromSource)
+                }
                 className={styles.preview}
               />
             )}

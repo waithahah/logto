@@ -233,12 +233,12 @@ describe('sign-in experience parser', () => {
     expect(sieFormDataParser.toSignInExperience(formData).signUpProfileFields).toEqual([]);
   });
 
-  it('should omit hideLogtoBranding from OSS payloads', () => {
+  it('should preserve hideLogtoBranding as true in OSS payloads', () => {
     const formData = sieFormDataParser.fromSignInExperience(mockSignInExperience);
 
     const payload = sieFormDataParser.toSignInExperience(formData, { isCloud: false });
 
-    expect(payload).not.toHaveProperty('hideLogtoBranding');
+    expect(payload.hideLogtoBranding).toBe(true);
   });
 
   it('should convert merged sign-up identifiers back to sign-up schema', () => {
@@ -288,12 +288,12 @@ describe('sign-in experience parser', () => {
     ).toEqual([]);
   });
 
-  it('should omit hideLogtoBranding from OSS compare payloads', () => {
+  it('should preserve hideLogtoBranding as true in OSS compare payloads', () => {
     const comparePayload = signInExperienceToUpdatedDataParser(mockSignInExperience, {
       isCloud: false,
     });
 
-    expect(comparePayload).not.toHaveProperty('hideLogtoBranding');
+    expect(comparePayload.hideLogtoBranding).toBe(true);
   });
 
   it('should support legacy social and passkey data defaults', () => {

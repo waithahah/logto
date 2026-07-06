@@ -271,8 +271,9 @@ export const adaptiveMfaGuard = z.object({
 }) satisfies ToZodObject<AdaptiveMfa>;
 
 export const customUiAssetsGuard = z.object({
-  id: z.string(),
-  createdAt: z.number(),
+  id: z.string().optional(),
+  createdAt: z.number().optional(),
+  useCustomUiFromSource: z.boolean().optional(),
 });
 
 export type CustomUiAssets = z.infer<typeof customUiAssetsGuard>;

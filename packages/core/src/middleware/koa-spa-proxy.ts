@@ -55,8 +55,12 @@ export default function koaSpaProxy<StateT, ContextT extends IRouterParamContext
       return next();
     }
     const { customUiAssets } = await queries.signInExperiences.findDefaultSignInExperience();
-    // If user has uploaded custom UI assets, serve them instead of native experience UI
-    if (customUiAssets && packagePath === 'experience') {
+    // If user has uploaded custom UI assets and not using custom UI from source, serve them instead of native experience UI
+    if (
+      customUiAssets?.id &&
+      !customUiAssets.useCustomUiFromSource &&
+      packagePath === 'experience'
+    ) {
       const serve = serveCustomUiAssets(customUiAssets.id);
       return serve(ctx, next);
     }

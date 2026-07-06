@@ -9,7 +9,7 @@ import styles from './index.module.scss';
 const PageFooter = () => {
   const { t } = useTranslation();
   const { theme, experienceSettings } = useContext(PageContext);
-  const hideLogtoBranding = experienceSettings?.hideLogtoBranding === true;
+  const hideLogtoBranding = experienceSettings?.hideLogtoBranding !== false;
   const { termsOfUseUrl, privacyPolicyUrl, supportEmail, supportWebsiteUrl } =
     experienceSettings ?? {};
   // Use `||` to treat empty string as missing so the mailto fallback works

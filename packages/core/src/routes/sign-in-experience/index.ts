@@ -349,7 +349,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
       }
 
       // Guard the quota for BYUI if the hideLogtoBranding is set to true
-      if (hideLogtoBranding) {
+      if (hideLogtoBranding && EnvSet.values.isCloud) {
         // Hide Logto branding is only available for Logto Cloud
         assertThat(
           EnvSet.values.isCloud,
@@ -368,7 +368,10 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
           })
         );
       }
-      if (hideLogtoBranding === true || hasCustomUiCsp) {
+      if (
+        ((hideLogtoBranding === true && EnvSet.values.isCloud) || hasCustomUiCsp) &&
+        EnvSet.values.isCloud
+      ) {
         await quota.guardTenantUsageByKey('bringYourUiEnabled');
       }
       if (passkeySignIn?.enabled) {
