@@ -57,6 +57,6 @@ ENV LOGTO_OSS_SURVEY_ENDPOINT=${logto_oss_survey_endpoint}
 ENV PRIVATE_KEY_ROTATION_GRACE_PERIOD=${private_key_rotation_grace_period}
 COPY --from=builder /etc/logto .
 RUN mkdir -p /etc/logto/packages/cli/alteration-scripts && chmod g+w /etc/logto/packages/cli/alteration-scripts
-EXPOSE 3001
+EXPOSE 3001 3002
 ENTRYPOINT ["npm", "run"]
 CMD ["start"]
