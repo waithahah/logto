@@ -9,7 +9,10 @@ ENV CI=true
 ENV PUPPETEER_SKIP_DOWNLOAD=true
 
 ### Install toolchain ###
-RUN npm add --location=global pnpm@^10.0.0
+ARG npm_registry=https://registry.npmjs.org/
+RUN npm config set registry ${npm_registry} && \
+    npm add --location=global pnpm@^10.0.0 && \
+    pnpm config set registry ${npm_registry}
 # https://github.com/nodejs/docker-node/blob/main/docs/BestPractices.md#node-gyp-alpine
 RUN apk add --no-cache python3 make g++ rsync
 
