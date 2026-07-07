@@ -1,17 +1,15 @@
 # This compose file is for demonstration only, do not use in prod.
 services:
   app:
-    depends_on:
-      postgres:
-        condition: service_healthy
-    image: svhd/logto:${TAG-latest}
-    entrypoint: ["sh", "-c", "npm run cli db seed -- --swe && npm start"]
+    image: polynex/logto:${VERSION:-1.41.1}
+    entrypoint: [ "sh", "-c", "npm run cli db seed -- --swe && npm start" ]
     ports:
       - 3001:3001
       - 3002:3002
     environment:
       - TRUST_PROXY_HEADER=1
-      - DB_URL=postgres://postgres:p0stgr3s@postgres:5432/logto
+      - DB_URL=${DB_URL:-postgres://postgres:p0stgr3s@postgres:5432/logto}
+      - REDIS_URL=${REDIS_URL:-redis://:p0stgr3s@postgres:6379}
       # Optional default grace period, in seconds, for OIDC private key rotation when the API
       # request omits `rotationGracePeriod`.
       - PRIVATE_KEY_ROTATION_GRACE_PERIOD
@@ -19,14 +17,3 @@ services:
       # Or, you can leverage it for local testing.
       - ENDPOINT
       - ADMIN_ENDPOINT
-  postgres:
-    image: postgres:17-alpine
-    user: postgres
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: p0stgr3s
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
