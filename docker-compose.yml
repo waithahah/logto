@@ -3,9 +3,9 @@ services:
   app:
     image: polynex/logto:${VERSION:-1.41.1}
     entrypoint: [ "sh", "-c", "npm run cli db seed -- --swe && npm start" ]
-    ports:
-      - 3001:3001
-      - 3002:3002
+    expose:
+      - 3001
+      - 3002
     environment:
       - TRUST_PROXY_HEADER=1
       - DB_URL=${DB_URL:-postgres://postgres:p0stgr3s@postgres:5432/logto}
@@ -17,3 +17,14 @@ services:
       # Or, you can leverage it for local testing.
       - ENDPOINT
       - ADMIN_ENDPOINT
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./nginx/logto.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - app
